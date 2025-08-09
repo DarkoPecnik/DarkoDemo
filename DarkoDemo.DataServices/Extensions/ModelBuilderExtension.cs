@@ -9,14 +9,14 @@ public static class ModelBuilderExtension
     {
         var customers = new List<Customer>();
 
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= 9; i++)
         {
             customers.Add(new Customer
             {
-                Id = Guid.CreateVersion7(),
+                Id = Guid.Parse($"d1a6f6a7-1b33-4a17-b78c-00000000000{i}"),
                 Name = $"Customer {i}",
                 Email = $"customer{i}@fake.com",
-                CreatedDate = DateTimeOffset.UtcNow,
+                CreatedDate = new DateTimeOffset(2025, 01, 01, 0, 0, 0, TimeSpan.Zero),
                 Active = true
             });
         }
