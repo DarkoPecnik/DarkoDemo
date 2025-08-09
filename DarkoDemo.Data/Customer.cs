@@ -10,11 +10,11 @@ public class Customer : IBaseEntity
 
     public string Email { get; set; } = default!;
 
-    public string FirstName { get; set; } = default!;
+    public string? FirstName { get; set; }
 
-    public string LastName { get; set; } = default!;
+    public string? LastName { get; set; }
 
-    public string Secret { get; set; } = default!;
+    public string? Secret { get; set; }
 
 
     // IBaseEntity
