@@ -1,17 +1,16 @@
-using DarkoDemo.Shared.Services;
+using DarkoDemo.Shared.Services.Interfaces;
 
-namespace DarkoDemo.Web.Client.Services
+namespace DarkoDemo.Web.Client.Services;
+
+public class FormFactor : IFormFactor
 {
-    public class FormFactor : IFormFactor
+    public string GetFormFactor()
     {
-        public string GetFormFactor()
-        {
-            return "WebAssembly";
-        }
+        return "WebAssembly";
+    }
 
-        public string GetPlatform()
-        {
-            return Environment.OSVersion.ToString();
-        }
+    public string GetPlatform()
+    {
+        return Environment.OSVersion.ToString();
     }
 }

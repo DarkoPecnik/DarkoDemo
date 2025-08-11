@@ -1,0 +1,32 @@
+﻿@page "/customers"
+@using DarkoDemo.Models
+@using DarkoDemo.Shared.Services
+
+@inject CoreApiClient CoreApi
+
+<PageTitle>Customers</PageTitle>
+
+<h3>Customers</h3>
+
+@if (customers is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <ul>
+        @foreach (var c in customers)
+        {
+            <li><NavLink href="@($"/customer/{c.Id}")">@c.Name</NavLink></li>
+        }
+    </ul>
+}
+
+@code {
+    private IEnumerable<CustomerRead>? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await CoreApi.ReadCustomers();
+    }
+}

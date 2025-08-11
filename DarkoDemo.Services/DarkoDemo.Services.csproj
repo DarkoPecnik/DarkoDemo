@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DarkoDemo.DataServices\DarkoDemo.DataServices.csproj" />
+    <ProjectReference Include="..\DarkoDemo.Models\DarkoDemo.Models.csproj" />
+  </ItemGroup>
+
 </Project>

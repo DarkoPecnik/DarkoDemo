@@ -46,4 +46,6 @@ public interface IRepository<TEntity> where TEntity : class, IBaseEntity
     Task<List<TEntity>> ReadSome(int skip = 0, int take = 50);
 
     Task<List<TEntity>> ReadSomeAfter(DateTimeOffset? lastCreatedAt = null, int take = 50);
+
+    IQueryable<TEntity> Query();
 }

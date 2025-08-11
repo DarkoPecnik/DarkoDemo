@@ -1,4 +1,4 @@
-using DarkoDemo.Shared.Services;
+using DarkoDemo.Shared.Services.Interfaces;
 
 namespace DarkoDemo.Web.Services
 {

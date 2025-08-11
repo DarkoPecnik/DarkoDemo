@@ -1,0 +1,38 @@
+﻿@page "/customer/{Id:guid}"
+
+@using DarkoDemo.Shared.Services
+
+@inject CoreApiClient CoreApi
+
+<PageTitle>Customer</PageTitle>
+
+<h3>Customer Details</h3>
+
+@if (customer == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="card p-3">
+        <h4>@customer.Name</h4>
+        <p><strong>Email:</strong> @customer.Email</p>
+        <p><strong>First Name:</strong> @customer.FirstName</p>
+        <p><strong>Last Name:</strong> @customer.LastName</p>
+        <p><strong>Created Date:</strong> @customer.CreatedDate.ToLocalTime().ToString("g")</p>
+        <p><strong>Modified Date:</strong> @(customer.ModifiedDate.HasValue? customer.ModifiedDate.Value.ToLocalTime().ToString("g") : "N/A")</p>
+        <p><strong>Active:</strong> @(customer.Active ? "Yes" : "No")</p>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private DarkoDemo.Data.Customer? customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customer = await CoreApi.GetCustomer(Id);
+    }
+}

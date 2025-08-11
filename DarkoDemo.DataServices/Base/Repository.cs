@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace DarkoDemo.DataServices.Base;
 
-public class Repository<TEntity>(AppDbContext appDbContext) : IRepository<TEntity> where TEntity : class, IBaseEntity
+internal class Repository<TEntity>(AppDbContext appDbContext) : IRepository<TEntity> where TEntity : class, IBaseEntity
 {
     protected readonly AppDbContext _appDbContext = appDbContext;
 
@@ -133,5 +133,10 @@ public class Repository<TEntity>(AppDbContext appDbContext) : IRepository<TEntit
         }
 
         return await query.Take(take).ToListAsync();
+    }
+
+    public IQueryable<TEntity> Query()
+    {
+        return _appDbContext.Set<TEntity>();
     }
 }
