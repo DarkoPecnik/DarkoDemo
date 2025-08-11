@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DarkoDemo.DataServices;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+internal class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,17 +1,16 @@
-using DarkoDemo.Shared.Services;
+using DarkoDemo.Shared.Services.Interfaces;
 
-namespace DarkoDemo.Services
+namespace DarkoDemo.Services;
+
+public class FormFactor : IFormFactor
 {
-    public class FormFactor : IFormFactor
+    public string GetFormFactor()
     {
-        public string GetFormFactor()
-        {
-            return DeviceInfo.Idiom.ToString();
-        }
+        return DeviceInfo.Idiom.ToString();
+    }
 
-        public string GetPlatform()
-        {
-            return DeviceInfo.Platform.ToString() + " - " + DeviceInfo.VersionString;
-        }
+    public string GetPlatform()
+    {
+        return DeviceInfo.Platform.ToString() + " - " + DeviceInfo.VersionString;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DarkoDemo.DataServices.Base;
 
-public class UnitOfWork(AppDbContext appDbContext) : IUnitOfWork
+internal class UnitOfWork(AppDbContext appDbContext) : IUnitOfWork
 {
     protected readonly AppDbContext _appDbContext = appDbContext;
 

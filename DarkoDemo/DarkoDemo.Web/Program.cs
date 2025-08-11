@@ -1,4 +1,4 @@
-using DarkoDemo.Shared.Services;
+using DarkoDemo.Shared.Services.Interfaces;
 using DarkoDemo.Web.Components;
 using DarkoDemo.Web.Services;
 
@@ -9,6 +9,8 @@ builder.AddServiceDefaults();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddOutputCache();
 
 // Add device-specific services used by the DarkoDemo.Shared project
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
@@ -33,6 +35,8 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseOutputCache();
 
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
