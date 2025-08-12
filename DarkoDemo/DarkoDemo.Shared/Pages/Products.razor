@@ -1,0 +1,97 @@
+﻿@page "/products"
+@using DarkoDemo.Data
+@using DarkoDemo.Models
+@using DarkoDemo.Shared.Services
+@inject CatalogApiClient CatalogApi
+
+<h3>Products</h3>
+
+<div>
+    <input @bind="newProductName" placeholder="Product Name" />
+    <input type="number" step="0.01" @bind="newProductPrice" placeholder="Price" />
+    <input type="number" @bind="newProductStock" placeholder="Stock Quantity" />
+
+    @if (categories is not null)
+    {
+        <div>
+            @foreach (var cat in categories)
+            {
+                <label>
+                    <input type="checkbox" value="@cat.Id" @onchange="e => ToggleCategory(cat.Id, e.Value?.ToString())" />
+                    @cat.Name
+                </label>
+            }
+        </div>
+    }
+
+    <button @onclick="AddProduct">Add</button>
+</div>
+
+@if (products is not null)
+{
+    <ul>
+        @foreach (var p in products)
+        {
+            <li>
+                @p.Name (@p.Price) - Categories:
+                @string.Join(", ", p.Categories.Select(pc => pc.Name))
+                <button @onclick="() => DeleteProduct(p.Id)">Delete</button>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private IEnumerable<ProductRead>? products;
+    private IEnumerable<Category>? categories;
+    private string newProductName = string.Empty;
+    private decimal newProductPrice;
+    private int newProductStock;
+    private List<Guid> selectedCategoryIds = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CatalogApi.ReadCategories();
+        products = await CatalogApi.ReadProducts();
+    }
+
+    private void ToggleCategory(Guid categoryId, string? isChecked)
+    {
+        if (bool.TryParse(isChecked, out var checkedState) && checkedState)
+        {
+            if (!selectedCategoryIds.Contains(categoryId))
+                selectedCategoryIds.Add(categoryId);
+        }
+        else
+        {
+            selectedCategoryIds.Remove(categoryId);
+        }
+    }
+
+    private async Task AddProduct()
+    {
+        if (string.IsNullOrWhiteSpace(newProductName) || !selectedCategoryIds.Any())
+            return;
+
+        var dto = new ProductWrite
+        {
+            Name = newProductName,
+            Price = newProductPrice,
+            StockQuantity = newProductStock,
+            CategoryIds = selectedCategoryIds
+        };
+
+        await CatalogApi.AddProduct(dto);
+        products = await CatalogApi.ReadProducts();
+        newProductName = "";
+        newProductPrice = 0;
+        newProductStock = 0;
+        selectedCategoryIds.Clear();
+    }
+
+    private async Task DeleteProduct(Guid id)
+    {
+        await CatalogApi.DeleteProduct(id);
+        products = await CatalogApi.ReadProducts();
+    }
+}
