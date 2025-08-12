@@ -1,0 +1,53 @@
+﻿@using DarkoDemo.Data
+@using DarkoDemo.Models
+@using DarkoDemo.Shared.Services
+
+@page "/categories"
+
+@inject CatalogApiClient CatalogApi
+
+<h3>Categories</h3>
+
+<input @bind="newCategoryName" placeholder="Category Name" />
+<button @onclick="AddCategory">Add</button>
+
+@if (categories is not null)
+{
+   <ul>
+    @foreach (var c in categories)
+    {
+        <li>
+            @c.Name
+            <button @onclick="() => DeleteCategory(c.Id)">Delete</button>
+        </li>
+    }
+</ul> 
+}
+
+
+@code {
+    private IEnumerable<Category>? categories;
+
+    private string newCategoryName = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CatalogApi.ReadCategories();
+    }
+
+    private async Task AddCategory()
+    {
+        if (string.IsNullOrWhiteSpace(newCategoryName)) return;
+
+        var category = new CategoryWrite { Name = newCategoryName };
+        await CatalogApi.AddCategory(category);
+        categories = await CatalogApi.ReadCategories();
+        newCategoryName = string.Empty;
+    }
+
+    private async Task DeleteCategory(Guid id)
+    {
+        await CatalogApi.DeleteCategory(id);
+        categories = await CatalogApi.ReadCategories();
+    }
+}

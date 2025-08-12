@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DarkoDemo.Api\DarkoDemo.Api.csproj" />
+    <ProjectReference Include="..\DarkoDemo.CatalogApi\DarkoDemo.CatalogApi.csproj" />
     <ProjectReference Include="..\DarkoDemo\DarkoDemo.Web\DarkoDemo.Web.csproj" />
   </ItemGroup>
 

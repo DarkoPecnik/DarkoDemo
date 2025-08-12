@@ -4,10 +4,14 @@ var apiService = builder.AddProject<Projects.DarkoDemo_Api>("darkodemo-api")
     .WithUrlForEndpoint("https", url => url.Url = "/scalar")
     .WithUrlForEndpoint("http", url => url.Url = "/scalar");
 
+var catalogApiService = builder.AddProject<Projects.DarkoDemo_CatalogApi>("darkodemo-catalogapi")
+    .WithUrlForEndpoint("https", url => url.Url = "/scalar")
+    .WithUrlForEndpoint("http", url => url.Url = "/scalar");
+
 builder.AddProject<Projects.DarkoDemo_Web>("darkodemo-web")
     .WithExternalHttpEndpoints()
     .WithReference(apiService)
-    .WaitFor(apiService);
-
+    .WaitFor(apiService)
+    .WaitFor(catalogApiService);
 
 builder.Build().Run();
