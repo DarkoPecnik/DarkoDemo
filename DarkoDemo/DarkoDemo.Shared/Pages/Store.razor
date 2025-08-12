@@ -1,0 +1,38 @@
+﻿@page "/store"
+
+@inject CatalogApiClient CatalogApi
+
+<h2>Storefront</h2>
+<hr />
+
+@if (products is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="products-grid">
+        @foreach (var product in products)
+        {
+            <div class="product-card">
+                <h3>@product.Name</h3>
+                <h5>@product.Description</h5>
+                <p>Price: @product.Price €</p>
+                <p>Stock: @product.StockQuantity</p>
+                @foreach (var category in product.Categories)
+                {
+                    <span>@category.Name</span>
+                }
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private IEnumerable<ProductRead>? products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await CatalogApi.ReadProducts();
+    }
+}
