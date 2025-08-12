@@ -1,0 +1,36 @@
+﻿@inject CustomerSwitcherService CustomerSwitcher
+@inject CoreApiClient CoreApi
+
+@if (customers is not null)
+{
+    <select @onchange="OnCustomerChange" class="form-select">
+        @foreach (var c in customers)
+        {
+            <option value="@c.Id" selected="@(c.Id == CustomerSwitcher.CurrentCustomerId)">
+                @c.Name
+            </option>
+        }
+    </select>
+}
+
+@code {
+    private IEnumerable<CustomerRead>? customers;
+
+    protected override async Task OnInitializedAsync()
+    {
+        customers = await CoreApi.ReadCustomers();
+
+        if (customers is not null && customers.Any() && CustomerSwitcher.CurrentCustomerId == Guid.Empty)
+        {
+            CustomerSwitcher.SetCustomer(customers.First().Id);
+        }
+    }
+
+    private void OnCustomerChange(ChangeEventArgs e)
+    {
+        if (Guid.TryParse(e.Value?.ToString(), out var newId))
+        {
+            CustomerSwitcher.SetCustomer(newId);
+        }
+    }
+}
