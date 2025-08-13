@@ -8,6 +8,7 @@ public static class Registrations
     {
         services.AddHttpClient<CoreApiClient>(client => { client.BaseAddress = new("https://localhost:7212/"); });
         services.AddHttpClient<CatalogApiClient>(client => { client.BaseAddress = new("https://localhost:7011/"); });
+        services.AddHttpClient<BasketApiClient>(client => { client.BaseAddress = new("https://localhost:7273/"); });
 
         services.AddSingleton<CustomerSwitcherService>();
 

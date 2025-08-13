@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject CustomerSwitcherService CustomerSwitcher
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">DarkoDemo</a>
     </div>
@@ -33,6 +35,12 @@
         </div>
 
         <div class="nav-item px-3">
+            <NavLink class="nav-link" href="@($"basket/{CustomerId}")">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Basket
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
             <NavLink class="nav-link" href="customers">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Customers
             </NavLink>
@@ -52,3 +60,23 @@
     </nav>
 </div>
 
+@code {
+    private Guid CustomerId;
+
+    protected override void OnInitialized()
+    {
+        CustomerId = CustomerSwitcher.CurrentCustomerId;
+        CustomerSwitcher.CustomerChanged += OnCustomerChanged;
+    }
+
+    private void OnCustomerChanged(Guid id)
+    {
+        CustomerId = id;
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        CustomerSwitcher.CustomerChanged -= OnCustomerChanged;
+    }
+}
