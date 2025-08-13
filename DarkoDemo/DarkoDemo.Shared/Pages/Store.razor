@@ -1,6 +1,9 @@
 ﻿@page "/store"
 
 @inject CatalogApiClient CatalogApi
+@inject BasketApiClient BasketApi
+@inject CustomerSwitcherService CustomerSwitcherService
+
 
 <h2>Storefront</h2>
 <hr />
@@ -23,6 +26,8 @@ else
                 {
                     <span>@category.Name</span>
                 }
+                <button @onclick="() => AddToBasket(product.Id)">Add to Basket</button>
+                <br />
             </div>
         }
     </div>
@@ -34,5 +39,14 @@ else
     protected override async Task OnInitializedAsync()
     {
         products = await CatalogApi.ReadProducts();
+    }
+
+    private async Task AddToBasket(Guid productId)
+    {
+        bool success = await BasketApi.AddToBasket(productId, CustomerSwitcherService.CurrentCustomerId);
+        if (success)
+        {
+            Console.WriteLine("Added to basket!");
+        }
     }
 }

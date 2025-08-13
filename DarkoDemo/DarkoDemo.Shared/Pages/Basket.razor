@@ -1,0 +1,52 @@
+﻿@page "/basket/{CustomerId:guid}"
+
+@inject BasketApiClient BasketApiClient
+
+<h3>Basket</h3>
+
+@if (basket is null)
+{
+    <p>Loading basket...</p>
+}
+else if (!basket.Items.Any())
+{
+    <p>Your basket is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in basket.Items)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.UnitPrice</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.SubTotal</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p><strong>Total:</strong> @basket.Total</p>
+}
+
+@code {
+    [Parameter] 
+    public Guid CustomerId { get; set; }
+
+    private BasketRead? basket;
+
+    protected override async Task OnInitializedAsync()
+    {
+        basket = await BasketApiClient.GetBasket(CustomerId);
+    }
+}

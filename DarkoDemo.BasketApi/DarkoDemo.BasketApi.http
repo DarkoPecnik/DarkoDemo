@@ -1,0 +1,6 @@
+@DarkoDemo.BasketApi_HostAddress = http://localhost:5270
+
+GET {{DarkoDemo.BasketApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

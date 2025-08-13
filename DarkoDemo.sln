@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkoDemo.DataServices.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkoDemo.CatalogApi", "DarkoDemo.CatalogApi\DarkoDemo.CatalogApi.csproj", "{2F3C6558-1799-2718-EF02-9BA9BC8A3673}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DarkoDemo.BasketApi", "DarkoDemo.BasketApi\DarkoDemo.BasketApi.csproj", "{F4E9A5B7-C9BC-4B86-2205-758F0599E99D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +100,10 @@ Global
 		{2F3C6558-1799-2718-EF02-9BA9BC8A3673}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F3C6558-1799-2718-EF02-9BA9BC8A3673}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F3C6558-1799-2718-EF02-9BA9BC8A3673}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E9A5B7-C9BC-4B86-2205-758F0599E99D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E9A5B7-C9BC-4B86-2205-758F0599E99D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4E9A5B7-C9BC-4B86-2205-758F0599E99D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4E9A5B7-C9BC-4B86-2205-758F0599E99D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{158C2DAE-3FEC-4B6A-B8D1-E7843071E63B} = {FF59B018-BD54-4F85-8517-9C29BA8F4DF0}
 		{1D0D3765-BACC-454D-86D4-7314EE03CB0C} = {E54238D4-042B-4E26-A8CF-C298FE991DA3}
 		{2F3C6558-1799-2718-EF02-9BA9BC8A3673} = {122D616A-B0DD-4CED-BA7D-55E2D7726EBF}
+		{F4E9A5B7-C9BC-4B86-2205-758F0599E99D} = {122D616A-B0DD-4CED-BA7D-55E2D7726EBF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0FB935A2-2F16-4D57-8D66-CFE755A60727}
