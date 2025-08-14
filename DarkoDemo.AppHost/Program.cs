@@ -19,4 +19,12 @@ builder.AddProject<Projects.DarkoDemo_Web>("darkodemo-web")
     .WaitFor(catalogApiService)
     .WaitFor(basketApiService);
 
+builder.AddNpmApp("darkodemo-angular", "../DarkoDemo.Angular")
+    .WithExternalHttpEndpoints()
+    .WithHttpEndpoint(env: "PORT")
+    .WithReference(apiService)
+    .WaitFor(apiService)
+    .WaitFor(catalogApiService)
+    .WaitFor(basketApiService);
+
 builder.Build().Run();
