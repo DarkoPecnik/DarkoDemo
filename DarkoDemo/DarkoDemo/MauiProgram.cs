@@ -2,6 +2,7 @@
 using DarkoDemo.Shared.Services;
 using DarkoDemo.Shared.Services.Interfaces;
 using Microsoft.Extensions.Logging;
+using MudBlazor;
 using MudBlazor.Services;
 
 namespace DarkoDemo
@@ -29,7 +30,10 @@ namespace DarkoDemo
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
-            builder.Services.AddMudServices();
+            builder.Services.AddMudServices(config =>
+            {
+                config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomEnd;
+            });
 
             return builder.Build();
         }
