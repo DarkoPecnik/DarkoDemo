@@ -2,6 +2,7 @@ using DarkoDemo.Shared.Services;
 using DarkoDemo.Shared.Services.Interfaces;
 using DarkoDemo.Web.Components;
 using DarkoDemo.Web.Services;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddOutputCache();
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
 builder.Services.AddSharedServices();
+
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 
@@ -36,6 +39,7 @@ else
 
 app.UseHttpsRedirection();
 
+app.MapStaticAssets();
 app.UseStaticFiles();
 app.UseAntiforgery();
 

@@ -2,6 +2,7 @@
 using DarkoDemo.Shared.Services;
 using DarkoDemo.Shared.Services.Interfaces;
 using Microsoft.Extensions.Logging;
+using MudBlazor.Services;
 
 namespace DarkoDemo
 {
@@ -28,6 +29,7 @@ namespace DarkoDemo
             builder.Services.AddBlazorWebViewDeveloperTools();
             builder.Logging.AddDebug();
 #endif
+            builder.Services.AddMudServices();
 
             return builder.Build();
         }

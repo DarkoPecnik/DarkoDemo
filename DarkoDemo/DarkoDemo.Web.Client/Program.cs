@@ -2,6 +2,7 @@ using DarkoDemo.Shared.Services;
 using DarkoDemo.Shared.Services.Interfaces;
 using DarkoDemo.Web.Client.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -9,5 +10,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
 builder.Services.AddSharedServices();
+
+builder.Services.AddMudServices();
 
 await builder.Build().RunAsync();
