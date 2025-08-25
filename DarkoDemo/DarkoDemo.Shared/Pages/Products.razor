@@ -1,95 +1,61 @@
-﻿@page "/products"
+﻿@attribute [Route(Routes.Admin.Products)]
 
 @inject CatalogApiClient CatalogApi
+@inject IDialogService Dialog
 
-<h3>Products</h3>
+<PageTitle>Products</PageTitle>
 
-<div>
-    <input @bind="newProductName" placeholder="Product Name" />
-    <input type="number" step="0.01" @bind="newProductPrice" placeholder="Price" />
-    <input type="number" @bind="newProductStock" placeholder="Stock Quantity" />
+<MudText Typo="Typo.h4" Class="mb-4">Products</MudText>
 
-    @if (categories is not null)
-    {
-        <div>
-            @foreach (var cat in categories)
-            {
-                <label>
-                    <input type="checkbox" value="@cat.Id" @onchange="e => ToggleCategory(cat.Id, e.Value?.ToString())" />
-                    @cat.Name
-                </label>
-            }
-        </div>
-    }
+<Loader ShowIfNull="products" />
 
-    <button @onclick="AddProduct">Add</button>
-</div>
-
-@if (products is not null)
+@if (products is not null && products.Any())
 {
-    <ul>
-        @foreach (var p in products)
-        {
-            <li>
-                @p.Name (@p.Price) - Categories:
-                @string.Join(", ", p.Categories.Select(pc => pc.Name))
-                <button @onclick="() => DeleteProduct(p.Id)">Delete</button>
-            </li>
-        }
-    </ul>
+    <MudDataGrid Items="@products" Outlined="true">
+        <Columns>
+            <PropertyColumn Property="x => x.Name" />
+            <PropertyColumn Property="x => x.Price" Format="C" />
+            <PropertyColumn Property="x => x.StockQuantity" Title="Stock Quantity" />
+            <TemplateColumn Title="Categories">
+                <CellTemplate>
+                    @foreach (var item in context.Item.Categories)
+                    {
+                        <MudChip T="string" Variant="Variant.Outlined">@item.Name</MudChip>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+             <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudButton OnClick="() => DeleteProduct(context.Item.Id, context.Item.Name)" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Error" DropShadow="false">Delete</MudButton>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
 }
+
+<MudToolBar Gutters="false">
+    <MudIconButton Variant="Variant.Filled"
+                   DropShadow="false"
+                   Color="Color.Primary"
+                   Icon="@Icons.Material.Filled.Add"
+                   Href="@Routes.Admin.AddProduct" />
+</MudToolBar>
+
 
 @code {
     private IEnumerable<ProductRead>? products;
-    private IEnumerable<Category>? categories;
-    private string newProductName = string.Empty;
-    private decimal newProductPrice;
-    private int newProductStock;
-    private List<Guid> selectedCategoryIds = new();
 
     protected override async Task OnInitializedAsync()
     {
-        categories = await CatalogApi.ReadCategories();
         products = await CatalogApi.ReadProducts();
     }
 
-    private void ToggleCategory(Guid categoryId, string? isChecked)
+    private async Task DeleteProduct(Guid id, string name)
     {
-        if (bool.TryParse(isChecked, out var checkedState) && checkedState)
+        if (await Dialog.ShowMessageBox("Delete", $"Do you want to delete product {name}?", "Yes", "No") == true)
         {
-            if (!selectedCategoryIds.Contains(categoryId))
-                selectedCategoryIds.Add(categoryId);
+            await CatalogApi.DeleteProduct(id);
+            products = await CatalogApi.ReadProducts();
         }
-        else
-        {
-            selectedCategoryIds.Remove(categoryId);
-        }
-    }
-
-    private async Task AddProduct()
-    {
-        if (string.IsNullOrWhiteSpace(newProductName) || !selectedCategoryIds.Any())
-            return;
-
-        var dto = new ProductWrite
-        {
-            Name = newProductName,
-            Price = newProductPrice,
-            StockQuantity = newProductStock,
-            CategoryIds = selectedCategoryIds
-        };
-
-        await CatalogApi.AddProduct(dto);
-        products = await CatalogApi.ReadProducts();
-        newProductName = "";
-        newProductPrice = 0;
-        newProductStock = 0;
-        selectedCategoryIds.Clear();
-    }
-
-    private async Task DeleteProduct(Guid id)
-    {
-        await CatalogApi.DeleteProduct(id);
-        products = await CatalogApi.ReadProducts();
     }
 }

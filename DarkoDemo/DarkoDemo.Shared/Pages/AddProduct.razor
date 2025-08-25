@@ -1,0 +1,75 @@
+﻿@attribute [Route(Routes.Admin.AddProduct)]
+
+@inject CatalogApiClient CatalogApi
+@inject IDialogService Dialog
+@inject NavigationManager Nav
+
+<PageTitle>New Product</PageTitle>
+
+<MudText Typo="Typo.h4" Class="mb-4">New Product</MudText>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudGrid>
+            <MudItem xs="12" sm="6" md="4">
+                <EditForm Model="@Product" OnValidSubmit="CreateProduct">
+                    <DataAnnotationsValidator />
+                    <MudStack Spacing="5">
+                        <MudTextField Label="Name" @bind-Value="Product.Name" For="@(() => Product.Name)" />
+                        <MudNumericField Label="Price" @bind-Value="Product.Price" For="@(() => Product.Price)" />
+                        <MudNumericField Label="Stock Quantity" @bind-Value="Product.StockQuantity" For="@(() => Product.StockQuantity)" />
+                        @if (categories is not null)
+                        {
+                            <MudSelect T="Category" Label="Categories" ToStringFunc="x => x.Name" MultiSelection="true" @bind-Value="_value" @bind-SelectedValues="_options">
+                                @foreach (var cat in categories)
+                                {
+                                    <MudSelectItem T="Category" Value="@cat">@cat.Name</MudSelectItem>
+                                }
+                            </MudSelect>
+                        }
+                    </MudStack>
+                    <MudStack Class="mt-6" AlignItems="AlignItems.End">
+                        <MudButton ButtonType="ButtonType.Submit"
+                                   Variant="@Variant.Filled"
+                                   Color="@Color.Primary"
+                                   DropShadow="false"
+                                   StartIcon="@Icons.Material.Filled.Add">Create</MudButton>
+                    </MudStack>
+                </EditForm>
+            </MudItem>
+        </MudGrid>
+    </MudCardContent>
+</MudCard>
+
+
+<MudToolBar Gutters="false">
+    <MudIconButton Variant="Variant.Filled"
+                   DropShadow="false"
+                   Color="Color.Primary"
+                   Icon="@Icons.Material.Filled.ArrowBack"
+                   Href="@Routes.Admin.Products" />
+</MudToolBar>
+
+@code {
+    [SupplyParameterFromForm]
+    private ProductWrite Product { get; set; } = new();
+
+    private IEnumerable<Category>? categories;
+
+    Func<Category, string?> converter = p => p?.Name;
+
+    private Category? _value;
+    private IEnumerable<Category> _options = new HashSet<Category>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await CatalogApi.ReadCategories();
+    }
+
+    private async Task CreateProduct()
+    {
+        Product.CategoryIds = _options.Select(c => c.Id).ToList();
+        await CatalogApi.AddProduct(Product);
+        Nav.NavigateTo(Routes.Admin.Products);
+    }
+}

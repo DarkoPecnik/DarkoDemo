@@ -1,0 +1,13 @@
+﻿<MudGrid>
+    <MudItem xs="12" sm="4" md="4" Class="align-content-center">
+        <MudText Class="bold">@Label</MudText>
+    </MudItem>
+    <MudItem xs="12" sm="8" md="8">
+        <MudField>@ChildContent</MudField>
+    </MudItem>
+</MudGrid>
+
+@code {
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

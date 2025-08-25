@@ -1,13 +1,13 @@
 ﻿@inject CustomerSwitcherService CustomerSwitcher
 
 <MudNavMenu>
-    <MudNavLink Href="/" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-    <MudNavLink Href="/store" Match="NavLinkMatch.Prefix">Store</MudNavLink>
-    <MudNavLink Href="@($"basket/{CustomerId}")" Match="NavLinkMatch.Prefix">Basket</MudNavLink>
+    <MudNavLink Href="@Routes.Home" Match="NavLinkMatch.All">Dashboard</MudNavLink>
+    <MudNavLink Href="@Routes.Store" Match="NavLinkMatch.Prefix">Store</MudNavLink>
+    <MudNavLink Href="@Routes.GetBasketRoute(CustomerId)" Match="NavLinkMatch.Prefix">Basket</MudNavLink>
     <MudNavGroup Title="Administration" Expanded="true">
-        <MudNavLink Href="/customers" Match="NavLinkMatch.Prefix">Customers</MudNavLink>
-        <MudNavLink Href="/categories" Match="NavLinkMatch.Prefix">Categories</MudNavLink>
-        <MudNavLink Href="/products" Match="NavLinkMatch.Prefix">Products</MudNavLink>
+        <MudNavLink Href="@Routes.Admin.Customers" Match="NavLinkMatch.Prefix">Customers</MudNavLink>
+        <MudNavLink Href="@Routes.Admin.Categories" Match="NavLinkMatch.Prefix">Categories</MudNavLink>
+        <MudNavLink Href="@Routes.Admin.Products" Match="NavLinkMatch.Prefix">Products</MudNavLink>
     </MudNavGroup>
 </MudNavMenu>
 

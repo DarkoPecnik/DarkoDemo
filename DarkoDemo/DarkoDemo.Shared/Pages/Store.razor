@@ -1,4 +1,5 @@
-﻿@page "/store"
+﻿@attribute [Route(Routes.Store)]
+
 @inject CatalogApiClient CatalogApi
 @inject BasketApiClient BasketApi
 @inject CustomerSwitcherService CustomerSwitcherService
@@ -50,10 +51,8 @@
 
     private async Task AddToBasket(Guid productId, string name)
     {
+        var config = (SnackbarOptions options) => { options.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow; };
         bool success = await BasketApi.AddToBasket(productId, CustomerSwitcherService.CurrentCustomerId);
-        if (success)
-        {
-            Snackbar.Add($"{name} added to basket.", Severity.Success);
-        }
+        if (success) Snackbar.Add($"{name} added to basket.", Severity.Success, config);
     }
 }

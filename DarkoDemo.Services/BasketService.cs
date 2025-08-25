@@ -21,25 +21,19 @@ public class BasketService(IRepository<Basket> repoBaskets, IRepository<BasketIt
             .ThenInclude(i => i.Product)
             .FirstOrDefaultAsync(b => b.CustomerId == customerId);
 
+        basketEntity ??= await CreateBasket(customerId);
+
         return basketEntity?.Adapt<BasketRead>();
     }
 
-    public async Task<Basket?> GetBasket(Guid customerId)
+    public async Task<Basket> GetBasket(Guid customerId)
     {
-        return await _repoBaskets.Query()
+        var basket = await _repoBaskets.Query()
             .AsNoTracking()
             .Include(b => b.Items)
             .FirstOrDefaultAsync(b => b.CustomerId == customerId);
-    }
 
-    public async Task<Basket> CreateBasket(Guid customerId)
-    {
-        Basket newBasket = new() { CustomerId = customerId };
-        InitializeForCreate(newBasket);
-        _repoBaskets.Create(newBasket);
-        await _unitOfWork.SaveChanges();
-
-        return newBasket;
+        return basket ?? await CreateBasket(customerId);
     }
 
     public async Task<int> CreateBasketItem(Guid basketId, Guid productId)
@@ -49,5 +43,22 @@ public class BasketService(IRepository<Basket> repoBaskets, IRepository<BasketIt
         InitializeForCreate(newBasketItem);
         _repoBasketItems.Create(newBasketItem);
         return await _unitOfWork.SaveChanges();
+    }
+
+    public async Task<int> IncrementBasketItem(Guid basketItemId)
+    {
+        var item = await _repoBasketItems.GetOne(basketItemId);
+        if (item is not null) item.Quantity++;
+        return await _unitOfWork.SaveChanges();
+    }
+
+    private async Task<Basket> CreateBasket(Guid customerId)
+    {
+        Basket newBasket = new() { CustomerId = customerId };
+        InitializeForCreate(newBasket);
+        _repoBaskets.Create(newBasket);
+        await _unitOfWork.SaveChanges();
+
+        return newBasket;
     }
 }
