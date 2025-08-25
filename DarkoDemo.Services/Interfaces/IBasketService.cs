@@ -7,9 +7,9 @@ public interface IBasketService
 {
     Task<BasketRead?> ReadBasket(Guid customerId);
 
-    Task<Basket?> GetBasket(Guid customerId);
-
-    Task<Basket> CreateBasket(Guid customerId);
+    Task<Basket> GetBasket(Guid customerId);
 
     Task<int> CreateBasketItem(Guid basketId, Guid productId);
+
+    Task<int> IncrementBasketItem(Guid basketItemId);
 }

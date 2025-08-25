@@ -1,30 +1,39 @@
-﻿@page "/categories"
+﻿@attribute [Route(Routes.Admin.Categories)]
 
 @inject CatalogApiClient CatalogApi
+@inject IDialogService Dialog
 
-<h3>Categories</h3>
+<PageTitle>Customers</PageTitle>
 
-<input @bind="newCategoryName" placeholder="Category Name" />
-<button @onclick="AddCategory">Add</button>
+<MudText Typo="Typo.h4" Class="mb-4">Categories</MudText>
 
-@if (categories is not null)
+<Loader ShowIfNull="categories" />
+
+@if (categories is not null && categories.Any())
 {
-   <ul>
-    @foreach (var c in categories)
-    {
-        <li>
-            @c.Name
-            <button @onclick="() => DeleteCategory(c.Id)">Delete</button>
-        </li>
-    }
-</ul> 
+    <MudDataGrid Items="@categories" Outlined="true">
+        <Columns>
+            <PropertyColumn Property="x => x.Name" />
+            <TemplateColumn CellClass="d-flex justify-end">
+                <CellTemplate>
+                    <MudButton OnClick="() => DeleteCategory(context.Item.Id, context.Item.Name)" Size="@Size.Small" Variant="@Variant.Filled" Color="@Color.Error" DropShadow="false">Delete</MudButton>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
 }
+
+<MudToolBar Gutters="false">
+    <MudIconButton Variant="Variant.Filled"
+                   DropShadow="false"
+                   Color="Color.Primary"
+                   Icon="@Icons.Material.Filled.Add"
+                   OnClick="AddCategory" />
+</MudToolBar>
 
 
 @code {
     private IEnumerable<Category>? categories;
-
-    private string newCategoryName = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,17 +42,27 @@
 
     private async Task AddCategory()
     {
-        if (string.IsNullOrWhiteSpace(newCategoryName)) return;
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var parameters = new DialogParameters<AddCategoryDialog> { { x => x.Category, new CategoryWrite() } };
+        var dialog = await Dialog.ShowAsync<AddCategoryDialog>("Add new category", parameters, options);
+        var result = await dialog.Result;
 
-        var category = new CategoryWrite { Name = newCategoryName };
-        await CatalogApi.AddCategory(category);
-        categories = await CatalogApi.ReadCategories();
-        newCategoryName = string.Empty;
+        if (result is not null && !result.Canceled)
+        {
+            if (result.Data is not null)
+            {
+                await CatalogApi.AddCategory((CategoryWrite)result.Data);
+                categories = await CatalogApi.ReadCategories();
+            }
+        }
     }
 
-    private async Task DeleteCategory(Guid id)
+    private async Task DeleteCategory(Guid id, string name)
     {
-        await CatalogApi.DeleteCategory(id);
-        categories = await CatalogApi.ReadCategories();
+        if (await Dialog.ShowMessageBox("Delete", $"Do you want to delete category {name}?", "Yes", "No") == true)
+        {
+            await CatalogApi.DeleteCategory(id);
+            categories = await CatalogApi.ReadCategories();
+        }
     }
 }

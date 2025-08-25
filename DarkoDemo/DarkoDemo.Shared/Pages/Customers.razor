@@ -1,23 +1,24 @@
-﻿@page "/customers"
+﻿@attribute [Route(Routes.Admin.Customers)]
 
 @inject CoreApiClient CoreApi
 
 <PageTitle>Customers</PageTitle>
 
-<h3>Customers</h3>
+<MudText Typo="Typo.h4" Class="mb-4">Customers</MudText>
 
-@if (customers is null)
+<Loader ShowIfNull="customers" />
+
+@if (customers is not null)
 {
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <ul>
-        @foreach (var c in customers)
-        {
-            <li><NavLink href="@($"/customer/{c.Id}")">@c.Name</NavLink></li>
-        }
-    </ul>
+    <MudDataGrid Items="@customers" Outlined="true">
+        <Columns>
+            <TemplateColumn HeaderClass="d-none">
+                <CellTemplate>
+                    <MudLink Underline="Underline.None" Typo="Typo.body2" href="@Routes.Admin.GetCustomerRoute(context.Item.Id)">@context.Item.Name</MudLink>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
 }
 
 @code {

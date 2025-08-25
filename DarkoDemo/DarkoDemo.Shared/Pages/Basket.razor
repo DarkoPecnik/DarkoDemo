@@ -1,46 +1,35 @@
-﻿@page "/basket/{CustomerId:guid}"
+﻿@attribute [Route(Routes.Basket)]
 
 @inject BasketApiClient BasketApiClient
 
-<h3>Basket</h3>
+<PageTitle>Basket</PageTitle>
 
-@if (basket is null)
-{
-    <p>Loading basket...</p>
-}
-else if (!basket.Items.Any())
-{
-    <p>Your basket is empty.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in basket.Items)
-            {
-                <tr>
-                    <td>@item.Product.Name</td>
-                    <td>@item.UnitPrice</td>
-                    <td>@item.Quantity</td>
-                    <td>@item.SubTotal</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<MudText Typo="Typo.h4" Class="mb-4">Basket</MudText>
 
-    <p><strong>Total:</strong> @basket.Total</p>
+<Loader ShowIfNull="basket" />
+
+@if (basket is not null && basket.Items.Any())
+{
+    <MudDataGrid Outlined="true" Items="@basket.Items">
+        <Columns>
+            <PropertyColumn Property="x => x.Product.Name" Title="Product" />
+            <PropertyColumn Property="x => x.UnitPrice" Title="Price" Format="C" />
+            <PropertyColumn Property="x => x.Quantity">
+                <FooterTemplate>
+                    <MudText Class="total" Typo="Typo.inherit">Total:</MudText>
+                </FooterTemplate>
+            </PropertyColumn>
+            <PropertyColumn Property="x => x.SubTotal" Title="Sub Total" Format="C">
+                <FooterTemplate>
+                    @basket.Total.ToString("C")
+                </FooterTemplate>
+            </PropertyColumn>
+        </Columns>
+    </MudDataGrid>
 }
 
 @code {
-    [Parameter] 
+    [Parameter]
     public Guid CustomerId { get; set; }
 
     private BasketRead? basket;

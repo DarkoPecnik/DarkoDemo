@@ -1,0 +1,25 @@
+﻿<EditForm Model="@Category" OnValidSubmit="Add">
+    <MudDialog>
+        <TitleContent>
+            <MudText Typo="Typo.h6">Add new category</MudText>
+        </TitleContent>
+        <DialogContent>
+            <DataAnnotationsValidator />
+            <MudTextField Label="Name:" @bind-Value="Category.Name" For="@(() => Category.Name)" />
+        </DialogContent>
+        <DialogActions>
+            <MudButton OnClick="Cancel">Cancel</MudButton>
+            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit">Add Category</MudButton>
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public CategoryWrite Category { get; set; } = new();
+
+    private void Cancel() => MudDialog?.Cancel();
+
+    private void Add() => MudDialog?.Close(DialogResult.Ok(Category));
+}

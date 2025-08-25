@@ -3,14 +3,12 @@
 
 @if (customers is not null)
 {
-    <select @onchange="OnCustomerChange" class="form-select">
+    <MudSelect T="Guid" @bind-Value="CustomerSwitcher.CurrentCustomerId" FitContent="true">
         @foreach (var c in customers)
         {
-            <option value="@c.Id" selected="@(c.Id == CustomerSwitcher.CurrentCustomerId)">
-                @c.Name
-            </option>
+            <MudSelectItem Value="@c.Id">@c.Name</MudSelectItem>
         }
-    </select>
+    </MudSelect>
 }
 
 @code {
@@ -23,14 +21,6 @@
         if (customers is not null && customers.Any() && CustomerSwitcher.CurrentCustomerId == Guid.Empty)
         {
             CustomerSwitcher.SetCustomer(customers.First().Id);
-        }
-    }
-
-    private void OnCustomerChange(ChangeEventArgs e)
-    {
-        if (Guid.TryParse(e.Value?.ToString(), out var newId))
-        {
-            CustomerSwitcher.SetCustomer(newId);
         }
     }
 }

@@ -43,23 +43,23 @@ public class BasketController(IBasketService basketService, IMemoryCache cache) 
     {
         if (customerId == Guid.Empty) return BadRequest("CustomerId is required.");
 
+        string cacheKey = $"{BasketCacheKeyPrefix}{customerId}";
+
         var basket = await _basketService.GetBasket(customerId);
 
-        basket ??= await _basketService.CreateBasket(customerId);
+        var item = basket.Items.FirstOrDefault(i => i.ProductId == productId);
 
-        if (basket is not null)
+        if (item is not null)
         {
-            var item = basket.Items.FirstOrDefault(i => i.ProductId == productId);
-
-            if (item is not null)
-            {
-                //increment quantity in basket item
-            }
-            else
-            {
-                await _basketService.CreateBasketItem(basket.Id, productId);
-            }
+            await _basketService.IncrementBasketItem(item.Id);
         }
+        else
+        {
+            await _basketService.CreateBasketItem(basket.Id, productId);
+
+        }
+
+        _cache.Remove(cacheKey);
 
         return Ok();
     }

@@ -1,36 +1,44 @@
-﻿@page "/store"
+﻿@attribute [Route(Routes.Store)]
 
 @inject CatalogApiClient CatalogApi
 @inject BasketApiClient BasketApi
 @inject CustomerSwitcherService CustomerSwitcherService
+@inject ISnackbar Snackbar
 
+<PageTitle>Storefront</PageTitle>
 
-<h2>Storefront</h2>
-<hr />
+<MudText Typo="Typo.h4" Class="mb-4">Storefront</MudText>
 
-@if (products is null)
+<Loader ShowIfNull="products" />
+
+@if (products is not null)
 {
-    <p>Loading...</p>
-}
-else
-{
-    <div class="products-grid">
+    <MudStack Row="true" Wrap="Wrap.Wrap">
         @foreach (var product in products)
         {
-            <div class="product-card">
-                <h3>@product.Name</h3>
-                <h5>@product.Description</h5>
-                <p>Price: @product.Price €</p>
-                <p>Stock: @product.StockQuantity</p>
-                @foreach (var category in product.Categories)
-                {
-                    <span>@category.Name</span>
-                }
-                <button @onclick="() => AddToBasket(product.Id)">Add to Basket</button>
-                <br />
-            </div>
+            <MudCard Outlined="true" Style="width: 450px;">
+                <MudCardHeader>
+                    <CardHeaderAvatar>
+                        <MudAvatar Color="Color.Primary">@product.Name.FirstLetterOfWord()</MudAvatar>
+                    </CardHeaderAvatar>
+                    <CardHeaderContent>
+                        <MudText Typo="Typo.body1">@product.Name</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText Typo="Typo.body2">@product.Description</MudText>
+                </MudCardContent>
+                <MudCardActions>
+                    @foreach (var category in product.Categories)
+                    {
+                        <MudChip T="string" Variant="Variant.Text" Color="Color.Default">@category.Name</MudChip>
+                    }
+                    <MudSpacer />
+                    <MudIconButton title="Add to basket" OnClick="() => AddToBasket(product.Id, product.Name)" Icon="@Icons.Material.Filled.AddShoppingCart" Color="Color.Secondary" />
+                </MudCardActions>
+            </MudCard>
         }
-    </div>
+    </MudStack>
 }
 
 @code {
@@ -41,12 +49,10 @@ else
         products = await CatalogApi.ReadProducts();
     }
 
-    private async Task AddToBasket(Guid productId)
+    private async Task AddToBasket(Guid productId, string name)
     {
+        var config = (SnackbarOptions options) => { options.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow; };
         bool success = await BasketApi.AddToBasket(productId, CustomerSwitcherService.CurrentCustomerId);
-        if (success)
-        {
-            Console.WriteLine("Added to basket!");
-        }
+        if (success) Snackbar.Add($"{name} added to basket.", Severity.Success, config);
     }
 }

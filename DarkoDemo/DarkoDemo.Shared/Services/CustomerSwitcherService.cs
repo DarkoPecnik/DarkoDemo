@@ -9,7 +9,7 @@ public class CustomerSwitcherService
     public Guid CurrentCustomerId
     {
         get => _currentCustomerId;
-        private set
+        set
         {
             if (_currentCustomerId != value)
             {
@@ -18,6 +18,7 @@ public class CustomerSwitcherService
             }
         }
     }
+
     public void SetCustomer(Guid customerId)
     {
         CurrentCustomerId = customerId;

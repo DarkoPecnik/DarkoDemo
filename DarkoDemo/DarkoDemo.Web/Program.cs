@@ -2,6 +2,8 @@ using DarkoDemo.Shared.Services;
 using DarkoDemo.Shared.Services.Interfaces;
 using DarkoDemo.Web.Components;
 using DarkoDemo.Web.Services;
+using MudBlazor;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,11 @@ builder.Services.AddOutputCache();
 builder.Services.AddSingleton<IFormFactor, FormFactor>();
 
 builder.Services.AddSharedServices();
+
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+});
 
 var app = builder.Build();
 
@@ -36,6 +43,7 @@ else
 
 app.UseHttpsRedirection();
 
+app.MapStaticAssets();
 app.UseStaticFiles();
 app.UseAntiforgery();
 

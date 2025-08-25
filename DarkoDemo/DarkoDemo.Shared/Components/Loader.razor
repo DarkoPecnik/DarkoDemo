@@ -1,0 +1,12 @@
+﻿@typeparam TModel
+
+@if (ShowIfNull is null)
+{
+    <MudStack Justify="Justify.Center" AlignItems="AlignItems.Center">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </MudStack>
+}
+
+@code {
+    [Parameter] public TModel? ShowIfNull { get; set; }
+}
