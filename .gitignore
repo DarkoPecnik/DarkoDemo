@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/DarkoDemo.Angular/src/app/api-spec/DarkoDemo.Api.json
+/DarkoDemo.Angular/src/app/api-spec/DarkoDemo.BasketApi.json
+/DarkoDemo.Angular/src/app/api-spec/DarkoDemo.CatalogApi.json

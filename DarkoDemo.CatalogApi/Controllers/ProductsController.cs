@@ -1,6 +1,8 @@
-﻿using DarkoDemo.Models;
+﻿using DarkoDemo.Messaging;
+using DarkoDemo.Models;
 using DarkoDemo.Services.Enums;
 using DarkoDemo.Services.Interfaces;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -8,10 +10,11 @@ namespace DarkoDemo.CatalogApi.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class ProductsController(IProductService productService, IMemoryCache cache) : ControllerBase
+public class ProductsController(IProductService productService, IMemoryCache cache, IPublishEndpoint publishEndpoint) : ControllerBase
 {
     private readonly IProductService _productService = productService;
     private readonly IMemoryCache _cache = cache;
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
 
     private const string ProductsCacheKey = "ProductsCache";
 
@@ -43,6 +46,7 @@ public class ProductsController(IProductService productService, IMemoryCache cac
         {
             case DeleteResult.Success:
                 _cache.Remove(ProductsCacheKey);
+                await _publishEndpoint.Publish(new ProductDeleted { ProductId = id });
                 return NoContent();
             default:
                 return NotFound();

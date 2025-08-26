@@ -1,5 +1,6 @@
 using DarkoDemo.DataServices;
 using DarkoDemo.Services;
+using MassTransit;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +27,11 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDataServices(builder.Configuration.GetConnectionString("AppDb")!);
 builder.Services.AddServices();
+
+builder.Services.AddMassTransit(x =>
+{
+    x.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+});
 
 var app = builder.Build();
 

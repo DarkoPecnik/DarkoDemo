@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />
     <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="9.0.8">
       <PrivateAssets>all</PrivateAssets>
@@ -16,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DarkoDemo.Messaging\DarkoDemo.Messaging.csproj" />
     <ProjectReference Include="..\DarkoDemo.ServiceDefaults\DarkoDemo.ServiceDefaults.csproj" />
     <ProjectReference Include="..\DarkoDemo.Services\DarkoDemo.Services.csproj" />
   </ItemGroup>
